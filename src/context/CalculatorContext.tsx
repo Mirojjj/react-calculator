@@ -42,6 +42,7 @@ export const CalculatorProvider= ({children}: {children: React.ReactNode}) => {
 
 
     const changeDigit = (digit: string) =>{
+         if(currentOperand === "" && digit===".")return;
         setCurrentOperand(currentOperand+digit)
     }  
     const chooseOperation = (operation: string) => {
