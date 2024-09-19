@@ -40,11 +40,12 @@ const App:React.FC =() =>{
             <DigitBtn digit={"1"} />
             <DigitBtn digit={"0"} />
             <div
-              className=" border-2 col-span-4 p-3 text-center flex items-center justify-center rounded-lg hover:bg-orange-500 hover:text-white transition-all cursor-pointer"
+              className=" border-2 col-span-3 p-3 text-center flex items-center justify-center rounded-lg hover:bg-orange-500 hover:text-white transition-all cursor-pointer"
               onClick={() => calculate()}
             >
               =
-            </div>      
+            </div>   
+            <DigitBtn digit="."></DigitBtn>   
         </div>
       </div>
     </div>

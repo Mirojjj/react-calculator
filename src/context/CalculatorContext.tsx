@@ -50,6 +50,7 @@ export const CalculatorProvider= ({children}: {children: React.ReactNode}) => {
         } else if (previousOperand !== "") {
             setPreviousOperand(previousOperand.slice(0, -1));
         }
+    
     };
     const clear = () =>{
         setCurrentOperand("");
@@ -60,8 +61,8 @@ export const CalculatorProvider= ({children}: {children: React.ReactNode}) => {
 
     const calculate =()=>{
         if (previousOperand === "" || currentOperand === "" || !operation) return;
-        const prev = parseInt(previousOperand);
-        const current = parseInt(currentOperand);
+        const prev = parseFloat(previousOperand);
+        const current = parseFloat(currentOperand);
         
         let result = 0;
         switch(operation){
