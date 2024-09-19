@@ -1,4 +1,6 @@
-import React, {createContext, useState} from 'react'
+
+import React, {createContext, useEffect, useState} from 'react'
+import { evaluateExpression } from '../utils/evaluateExpress';
 
 interface CalculatorContextProps{
     currentOperand: string;
@@ -12,7 +14,9 @@ interface CalculatorContextProps{
     calculate: () => void;
 }
 
+
 export const CalculatorContext = createContext<CalculatorContextProps| undefined>(undefined);
+
 
 
 
@@ -22,69 +26,65 @@ export const CalculatorProvider= ({children}: {children: React.ReactNode}) => {
     const [previousOperand, setPreviousOperand] = useState<string>("");
     const [operation, setOperation] = useState<string|null>(null); 
     const [result, setResult] = useState<string>("");
+    const[operationAf, setOperationAf] = useState<boolean>(false);
+    const [resultBtn, setResultBtn] = useState<boolean>(false)
+
+
+    useEffect(() => {
+        if (resultBtn && operationAf) {
+            console.log(operation)
+            setCurrentOperand(result + (operation || ""));
+            setResult(""); 
+            setResultBtn(false); 
+            setOperationAf(false)
+        }
+    }, [ resultBtn, operationAf, operation]);
+
 
     const changeDigit = (digit: string) =>{
-            if(currentOperand === "0" && digit === "0") return;
-            setCurrentOperand(currentOperand+digit)
+        setCurrentOperand(currentOperand+digit)
     }  
-
-    const chooseOperation = (operation: string) =>{
-        if(currentOperand === "") return;
-        if(previousOperand !== ""){
-            calculate();
+    const chooseOperation = (operation: string) => {
+        if(resultBtn){
+            setOperationAf(true);
         }
-        setOperation(operation);
-        setPreviousOperand(currentOperand);
-        setCurrentOperand("");
-    }
+
+        if (currentOperand === "" && operation !== "-") return; 
+        const lastChar = currentOperand.slice(-1);
+        const isLastCharOperator = /[\+\-\*\/]/.test(lastChar);
+        if (isLastCharOperator) {
+          setCurrentOperand(currentOperand.slice(0, -1) + operation);
+        } else {
+          setCurrentOperand(currentOperand + operation);
+        }
+        setOperation(operation)
+      };
 
     const del = () => {
         console.log("del pressed");
-    
         if (currentOperand !== "") {
             setCurrentOperand(currentOperand.slice(0, -1));
-        } else if (operation !== null && previousOperand !== "") {
-            setOperation(null); 
-            setCurrentOperand(previousOperand); 
-            setPreviousOperand(""); 
-        } else if (previousOperand !== "") {
-            setPreviousOperand(previousOperand.slice(0, -1));
         }
-    
     };
     const clear = () =>{
         setCurrentOperand("");
         setPreviousOperand("");
         setResult("")
         setOperation(null); 
+        setOperationAf(false)
+        setResultBtn(false)
     }
 
     const calculate =()=>{
-        if (previousOperand === "" || currentOperand === "" || !operation) return;
-        const prev = parseFloat(previousOperand);
-        const current = parseFloat(currentOperand);
-        
-        let result = 0;
-        switch(operation){
-            case "+":
-                result = prev + current;
-                setResult(result.toString());
-                break;
-              case "-":
-                result = prev - current;
-                setResult(result.toString());
-                break;
-              case "*":
-                result = prev * current;
-                setResult(result.toString());
-                break;
-              case "/":
-                result = prev / current;
-                setResult(result.toString());
-                break;
-              default:
-                return;
-        }
+        try {
+            const evalResult = evaluateExpression(currentOperand);
+            // setCurrentOperand(evalResult.toString());
+            setResult(evalResult.toString())
+            setResultBtn(true);
+
+          } catch (error) {
+            console.error("Error evaluating expression:", error);
+          }
     }
 
   return (
