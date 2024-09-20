@@ -33,7 +33,7 @@ export const CalculatorProvider= ({children}: {children: React.ReactNode}) => {
 
     useEffect(() => {
         if (resultBtn && operationAf) {
-            console.log(operation)
+
             setCurrentOperand(result + (operation || ""));
             setResult(""); 
             setResultBtn(false); 
@@ -44,8 +44,6 @@ export const CalculatorProvider= ({children}: {children: React.ReactNode}) => {
 
     const changeDigit = (digit: string) =>{
          if(currentOperand === "" && digit===".")return;
-         console.log(currentOperand)
-         console.log(currentOperand.slice(-1))
         //  if(currentOperand.slice(0,-1) ==="." && digit===".")return;
         //  console.log(currentOperand.includes("."))
         //  if(digit === "." || currentOperand.includes(".") )return;
