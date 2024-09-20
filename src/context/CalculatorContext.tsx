@@ -30,6 +30,7 @@ export const CalculatorProvider= ({children}: {children: React.ReactNode}) => {
     const [resultBtn, setResultBtn] = useState<boolean>(false)
 
 
+
     useEffect(() => {
         if (resultBtn && operationAf) {
             console.log(operation)
@@ -82,30 +83,18 @@ export const CalculatorProvider= ({children}: {children: React.ReactNode}) => {
     }
 
     const calculate =()=>{
-      let dotCount =0;
-      for(let i =0; i<currentOperand.length; i++){
-        if(currentOperand[i]==="."){
-          dotCount++;
-        }
-      }
-      console.log(dotCount)
-      if(dotCount>1){
-        setResult("Syntax Error");
-      }
-      else{
         try {
-        
-
             const evalResult = evaluateExpression(currentOperand);
             // setCurrentOperand(evalResult.toString());
             setResult(evalResult.toString())
             setResultBtn(true);
 
-          } catch (error) {
-            console.error("Error evaluating expression:", error);
+          } catch (error:any) {
+            setResult(error.toString())
+            // console.error("Error evaluating expression:", error);
           }
     }
-  }
+
 
   return (
     <CalculatorContext.Provider value={{currentOperand, previousOperand,result,operation,chooseOperation, changeDigit,clear, calculate, del}}>
