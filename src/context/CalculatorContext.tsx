@@ -43,7 +43,11 @@ export const CalculatorProvider= ({children}: {children: React.ReactNode}) => {
 
     const changeDigit = (digit: string) =>{
          if(currentOperand === "" && digit===".")return;
-         if(currentOperand.slice(-1) ==="." && digit===".")return;
+         console.log(currentOperand)
+         console.log(currentOperand.slice(-1))
+        //  if(currentOperand.slice(0,-1) ==="." && digit===".")return;
+        //  console.log(currentOperand.includes("."))
+        //  if(digit === "." || currentOperand.includes(".") )return;
         setCurrentOperand(currentOperand+digit)
     }  
     const chooseOperation = (operation: string) => {
@@ -78,7 +82,20 @@ export const CalculatorProvider= ({children}: {children: React.ReactNode}) => {
     }
 
     const calculate =()=>{
+      let dotCount =0;
+      for(let i =0; i<currentOperand.length; i++){
+        if(currentOperand[i]==="."){
+          dotCount++;
+        }
+      }
+      console.log(dotCount)
+      if(dotCount>1){
+        setResult("Syntax Error");
+      }
+      else{
         try {
+        
+
             const evalResult = evaluateExpression(currentOperand);
             // setCurrentOperand(evalResult.toString());
             setResult(evalResult.toString())
@@ -88,6 +105,7 @@ export const CalculatorProvider= ({children}: {children: React.ReactNode}) => {
             console.error("Error evaluating expression:", error);
           }
     }
+  }
 
   return (
     <CalculatorContext.Provider value={{currentOperand, previousOperand,result,operation,chooseOperation, changeDigit,clear, calculate, del}}>

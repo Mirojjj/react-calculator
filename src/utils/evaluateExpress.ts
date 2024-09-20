@@ -77,5 +77,6 @@ export const evaluateExpression = (expression: string, precision = 10): number =
     return roundToPrecision(result);
   };
   const mulDivResult = handleMulDiv(expression);
+
   return handleAddSub(mulDivResult);
 };
