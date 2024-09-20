@@ -38,11 +38,12 @@ export const CalculatorProvider= ({children}: {children: React.ReactNode}) => {
             setResultBtn(false); 
             setOperationAf(false)
         }
-    }, [ resultBtn, operationAf, operation]);
+    }, [resultBtn, operationAf, operation]);
 
 
     const changeDigit = (digit: string) =>{
          if(currentOperand === "" && digit===".")return;
+         if(currentOperand.slice(-1) ==="." && digit===".")return;
         setCurrentOperand(currentOperand+digit)
     }  
     const chooseOperation = (operation: string) => {

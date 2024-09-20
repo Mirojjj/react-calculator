@@ -1,6 +1,11 @@
-export const evaluateExpression = (expression: string): number => {
-
+export const evaluateExpression = (expression: string, precision = 10): number => {
   expression = expression.replace(/\s+/g, '');
+
+
+  const roundToPrecision = (num: number): number => {
+    const factor = Math.pow(10, precision);
+    return Math.round(num * factor) / factor;
+  };
 
 
   const handleMulDiv = (expr: string): string => {
@@ -36,8 +41,9 @@ export const evaluateExpression = (expression: string): number => {
         const right = tokens[i + 1] as number;
         const result = tokens[i] === '*' ? left * right : left / right;
 
-        tokens.splice(i - 1, 3, result); 
-        i--; 
+
+        tokens.splice(i - 1, 3, roundToPrecision(result));
+
       } else {
         i++;
       }
@@ -68,13 +74,8 @@ export const evaluateExpression = (expression: string): number => {
     if (currentNum) {
       result += operation === '+' ? parseFloat(currentNum) : -parseFloat(currentNum);
     }
-
-    return result;
+    return roundToPrecision(result);
   };
-
-
   const mulDivResult = handleMulDiv(expression);
-
-
   return handleAddSub(mulDivResult);
 };
